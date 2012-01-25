@@ -135,7 +135,8 @@
 # **Author** Arjan van der Gaag <br>
 # **Email** <arjan@arjanvandergaag.nl><br>
 # **URL** <http://arjanvandergaag.nl><br>
-# **Date**   2011-11-23
+# **Date** 2011-11-23<br>
+# **Source & issues** <http://github.com/avdgaag/i18n.js>
 
 # ---
 
