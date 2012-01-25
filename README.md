@@ -154,6 +154,11 @@ window.i18n.translations = {
 
 This script has no external dependencies.
 
+## Contributions
+
+Pull requests and bug reports are much appreciated. If you want to contribute,
+make sure to edit the `lib/i18n.coffee` file, not the `lib/i18n.js` file.
+
 ## Credits
 
 **Author** Arjan van der Gaag  
