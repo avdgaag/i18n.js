@@ -1,0 +1,182 @@
+<!DOCTYPE html>  <html> <head>   <title>i18n.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               i18n.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <h2>Simple i18n for client-side javascript</h2>
+
+<p>Provide a <code>t</code> method that works similarly to <code>t</code> found in Rails, so you can
+write your javascript views using simple keys that get translated on the
+client side to the current locale.</p>
+
+<h3>Setting the locale</h3>
+
+<p>The current locale can be directly set on the global <code>i18n</code> object as a
+two-letter country code:</p>
+
+<pre><code>window.i18n.locale = 'nl'
+</code></pre>
+
+<p>By default, a <code>i18n</code> is created for you with the locale set to the value of
+the document's root HTML element's <code>lang</code> attribute. So in the following
+example the locale will be <code>nl</code>:</p>
+
+<pre><code>&lt;!doctype html&gt;
+&lt;html lang="nl"&gt;
+...
+&lt;/html&gt;
+</code></pre>
+
+<p>When no translation is given, 'en' will be used as the default.</p>
+
+<h3>Defining translations</h3>
+
+<p>The full set of translations is a simple Javascript object with keys and
+values.  You define them on <code>translations</code>:</p>
+
+<pre><code>window.i18n.translations =
+  en:
+    welcome: 'Welcome'
+  nl:
+    welcome: 'Welkom'
+</code></pre>
+
+<p>You can nest multiple objects for namespacing purposes:</p>
+
+<pre><code>window.i18n.translations =
+  nl:
+    dialogs:
+      cancel: 'Annuleren'
+</code></pre>
+
+<h3>Translating a key</h3>
+
+<p>The <code>I18n</code> provides the <code>translate</code> function, which is aliased by default as
+<code>t</code> on the global object. Usage is simple:</p>
+
+<pre><code>t('foo') # =&gt; 'bar'
+</code></pre>
+
+<h4>Nested key lookup</h4>
+
+<p>When you namespace translation keys, you can use a string with dot notation
+to locate it, just like in Rails:</p>
+
+<pre><code>window.i18n.translations = 
+  nl:
+    dialogs:
+      cancel: 'Annuleren'
+t 'dialogs.cancel' # =&gt; 'Annuleren'
+</code></pre>
+
+<p>Note that you do not have to provide the top-level key that maps to the
+current locale.</p>
+
+<h4>String interpolation</h4>
+
+<p>Simple string interpolation is supported for translatable strings:</p>
+
+<pre><code>window.i18n.translations =
+  nl:
+    greeting: 'Hello, %{name}!'
+t 'greeting', name: 'world' # =&gt; 'Hello, world!'
+</code></pre>
+
+<p>The second argument is an object whose keys will be used to fill in the
+specially formatted placeholders in the translated string.</p>
+
+<p>Note that placeholders for which no value is defined are left alone and will
+show up on the site, which is not pretty.</p>
+
+<h4>Default values</h4>
+
+<p>There is a special option to set on the second argument to <code>t</code> called
+<code>default</code>, which will be used as the translated string when there is no value
+explicitly set for the given key.</p>
+
+<pre><code>t 'nonexistant_key', default: 'foo' # =&gt; 'foo'
+</code></pre>
+
+<p>When a key does not exist, and no default value is explicitly provided, the
+last part of they key will be used as default:</p>
+
+<pre><code>t 'foo.bar.baz' # =&gt; 'baz'
+</code></pre>
+
+<h3>Usage</h3>
+
+<p>Just include this script on any page. Use it in a Rails project with the
+asset pipeline by adding the files to your <code>vendor/assets</code> or <code>lib/assets</code>
+directory and requiring it in your manifest file:</p>
+
+<pre><code># app/assets/javacsripts/application.js
+/*
+ * require 'i18n'
+ */
+</code></pre>
+
+<p>Then, you might want to define a separate file in your <code>app/assets</code> directory
+containing your translations. (Automatically) including your Rails app's
+translations in this file is left as an excercise for the reader...</p>
+
+<pre><code># app/assets/javascripts/translations.coffee
+@i18n.translations:
+  en:
+    foo: 'bar'
+  nl:
+    foo: 'baz'
+</code></pre>
+
+<p>The repository also contains a pre-compiled javascript version which you can
+include on any page:</p>
+
+<pre><code>&lt;script src="i18n.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+window.i18n.translations = {
+  en: {
+    foo: 'bar'
+  },
+  nl: {
+    foo: 'baz'
+  }
+};
+&lt;/script&gt;
+</code></pre>
+
+<h3>Dependencies</h3>
+
+<p>This script has no external dependencies.</p>
+
+<h3>Credits</h3>
+
+<p><strong>Author</strong> Arjan van der Gaag <br>
+<strong>Email</strong> <a href="&#109;&#x61;&#105;&#108;t&#111;:&#x61;&#114;&#106;a&#x6E;&#x40;&#x61;&#x72;&#x6A;&#x61;&#x6E;&#118;&#97;&#x6E;&#100;&#101;&#114;&#103;&#97;&#x61;&#103;&#46;&#110;&#108;">&#x61;&#114;&#106;a&#x6E;&#x40;&#x61;&#x72;&#x6A;&#x61;&#x6E;&#118;&#97;&#x6E;&#100;&#101;&#114;&#103;&#97;&#x61;&#103;&#46;&#110;&#108;</a><br>
+<strong>URL</strong> <a href="http://arjanvandergaag.nl">http://arjanvandergaag.nl</a><br>
+<strong>Date</strong>   2011-11-23</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h2>The I18n object</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>The <code>I18n</code> class encapsulates the functionality for looking up keys and
+handling defaults and interpolation.</p>
+
+<p>An instance of this class is automatically created, but there's nothing
+stopping you from creating another manually.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">I18n</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Set up a new translations object for a given language, defaulting to <code>en</code>.
+Recommended usage is creating a new object with the value of the <code>lang</code>
+attribute of the page's <code>html</code> element.</p>
+
+<p>If you want to manually set the locale -- and not use the auto-selected value
+based on the <code>html</code> element's <code>lang</code> attribute -- you could also just manually
+assign it:</p>
+
+<pre><code>window.i18n.locale = 'de'
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">constructor: </span><span class="nf">(@locale = &#39;en&#39;) -&gt;</span>
+    <span class="vi">@translations = </span><span class="p">{}</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Fetch a translation for a JSON path from the <code>translations</code> attribute,
+which should be set externally.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">fetch: </span><span class="nf">(path) -&gt;</span>
+    <span class="nv">parts = </span><span class="nx">path</span><span class="p">.</span><span class="nx">split</span> <span class="s1">&#39;.&#39;</span>
+    <span class="nv">key   = </span><span class="nx">parts</span><span class="p">.</span><span class="nx">pop</span><span class="p">()</span>
+    <span class="nv">scope = </span><span class="nx">@translations</span><span class="p">[</span><span class="nx">@locale</span><span class="p">]</span>
+    <span class="nv">scope = </span><span class="nx">scope</span><span class="o">?</span><span class="p">[</span><span class="nx">part</span><span class="p">]</span> <span class="k">for</span> <span class="nx">part</span> <span class="k">in</span> <span class="nx">parts</span>
+    <span class="nx">scope</span><span class="o">?</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Interpolate values from a <code>dict</code> object into the translation string <code>str</code>.
+This ignores the <code>default</code> key from <code>dict</code> so all the options to to
+the <code>translate</code> function can be passed straight into this function.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">format: </span><span class="nf">(str, dict) -&gt;</span>
+    <span class="k">for</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">value</span> <span class="k">of</span> <span class="nx">dict</span> <span class="k">when</span> <span class="nx">key</span> <span class="o">isnt</span> <span class="s1">&#39;default&#39;</span>
+      <span class="nv">str = </span><span class="nx">str</span><span class="p">.</span><span class="nx">replace</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="s2">&quot;%{#{key}}&quot;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">),</span> <span class="nx">value</span>
+    <span class="nx">str</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Get the translated value for a given path, returning a string with the values
+from <code>options</code> interpolated in it. When no translation is available, use the
+<code>default</code> key from options as a fallback. If no fallback is provided,
+simply use the last part of the path string.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">translate: </span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nv">options = </span><span class="p">{})</span> <span class="o">=&gt;</span>
+    <span class="nx">@format</span><span class="p">(</span><span class="nx">@fetch</span><span class="p">(</span><span class="nx">path</span><span class="p">)</span> <span class="o">||</span> <span class="nx">options</span><span class="p">.</span><span class="nx">default</span> <span class="o">||</span> <span class="nx">path</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">).</span><span class="nx">pop</span><span class="p">(),</span> <span class="nx">options</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h2>Auto-setup</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>Automatically set up a single new <code>I18n</code> object based on the language of the
+current document's <code>html</code> element's <code>lang</code> attribute.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="vi">@i18n = </span><span class="k">new</span> <span class="nx">I18n</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">&#39;html&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">].</span><span class="nx">getAttribute</span> <span class="s1">&#39;lang&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>Alias the <code>translate</code> function to <code>t</code></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="vi">@t = </span><span class="nx">@i18n</span><span class="p">.</span><span class="nx">translate</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
